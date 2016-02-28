@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Blameurl;
+use Laravel\Lumen\Routing\Controller;
+use Illuminate\Http\Request;
+
 
 class BlameurlController extends Controller
 {

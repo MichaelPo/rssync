@@ -12,15 +12,15 @@
 */
 
 $app->group(['namespace' => 'App\Http\Controllers'] , function($app){
-    $api = 'api';
-    $app->get($api.'/', ['uses' => 'BlameurlController@getBlameurls', 'as' => 'allBlameurls']);
-    $app->get($api.'/blameurl/{id}', ['uses' => 'BlameurlController@getBlameurl', 'as' => 'singleBlameurl']);
-    $app->post($api.'/blameurl', ['uses' => 'BlameurlController@saveBlameurl', 'as' => 'saveArticle']);
-    $app->put($api.'/blameurl/{id}', ['uses' => 'BlameurlController@updateBlameurl', 'as' => 'updateBlameurl']);
-    $app->delete($api.'/blameurl/{id}', ['uses' => 'BlameurlController@deleteBlameurl', 'as' => 'deleteBlameurl']);
+    $api = '/api';
+    $app->get(env('BASE_PATH','').$api.'/', ['uses' => 'BlameurlController@getBlameurls', 'as' => 'allBlameurls']);
+    $app->get(env('BASE_PATH','').$api.'/blameurl/{id}', ['uses' => 'BlameurlController@getBlameurl', 'as' => 'singleBlameurl']);
+    $app->post(env('BASE_PATH','').$api.'/blameurl', ['uses' => 'BlameurlController@saveBlameurl', 'as' => 'saveArticle']);
+    $app->put(env('BASE_PATH','').$api.'/blameurl/{id}', ['uses' => 'BlameurlController@updateBlameurl', 'as' => 'updateBlameurl']);
+    $app->delete(env('BASE_PATH','').$api.'/blameurl/{id}', ['uses' => 'BlameurlController@deleteBlameurl', 'as' => 'deleteBlameurl']);
 });
 
 
-$app->get('/', function () use ($app) {
-    return $app->version();
+$app->get(env('BASE_PATH',''), function () use ($app) {
+    echo 'hello world ';
 });
