@@ -9,13 +9,6 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="lvi-red1.lv-h.de - statische Dateien">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="lvir-red1.lv-h.de">
         <serverdata>
           <mappings>
@@ -31,13 +24,6 @@
         </serverdata>
       </paths>
       <paths name="lvir-red1.lv-h.de - Templates topagrar.com">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="lvir-red1.lvh-.de - Templates landlust.de">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
