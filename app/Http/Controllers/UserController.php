@@ -7,7 +7,7 @@ use Laravel\Lumen\Routing\Controller;
 use Illuminate\Http\Request;
 
 
-class UsereController extends Controller
+class UserController extends Controller
 {
 
     /**
@@ -48,23 +48,27 @@ class UsereController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+        $input['avatar'] = url('/').'/'.$input['avatar'];
+        $request->replace($input);
+
         $this->validate($request, [
-            'avatar' => 'required',
-            'password' => 'required',
+            'avatar' => 'required|url|unique:user',
+            'password' => 'required|min:6',
             'jsonfav' => 'required',
             'lastsync' => 'required'
         ]);
 
         $user = new User();
         $user->avatar = $request->avatar;
+        $user->email = $request->email;
         $user->password = $request->password;
         $user->jsonfav = $request->jsonfav;
         $date = new \DateTime($request->lastsync);
         $dd = $date->format('Y-m-d');
         $user->lastsync = $dd;
         $user->save();
-        return response()->json(['status' => 'success', 'id' => $user->id]);
+        return response()->json($user);
 
     }
 
@@ -92,6 +96,7 @@ class UsereController extends Controller
 
         $user = new User();
         $user->avatar = $request->avatar;
+        $user->email = $request->email;
         $user->password = $request->password;
         $user->jsonfav = $request->jsonfav;
         $date = new \DateTime($request->lastsync);

@@ -14,6 +14,8 @@ class User extends Model implements
 {
     use Authenticatable, Authorizable;
 
+    protected $table = "user";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -22,5 +24,6 @@ class User extends Model implements
     protected $fillable = [
         'avatar', 'password','jsonfav', 'email'
     ];
+
 
 }
