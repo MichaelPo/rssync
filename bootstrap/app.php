@@ -23,7 +23,10 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
- $app->withFacades();
+$app->withFacades();
+
+
+
 
  $app->withEloquent();
 
@@ -77,6 +80,12 @@ $app->singleton(
 | totally optional, so you are not required to uncomment this line.
 |
 */
+
+$app->register(Spatie\Analytics\AnalyticsServiceProvider::class);
+
+
+$app->withFacades(true, ['Spatie\Analytics\AnalyticsFacade::class' => 'Analytics']);
+
 
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
