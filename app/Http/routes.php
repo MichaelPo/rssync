@@ -23,18 +23,20 @@ $app->group(['prefix' => 'user/'], function ($app) {
 
 
 $app->get('/reorder_recipies', function () use ($app) {
-    //$json = file_get_contents('/recipies.json');
-    //$jsonObject = new JsonObject($json);
-    //$analyticsData = Analytics::fetchVisitorsAndPageViews(Period::days(7));
+    $json = file_get_contents(storage_path('app/recipies.json'));
+    $jsonObject = new JsonObject($json);
+
+    // get base url nach Aufrufen absteigend sortiert zurück
     $dimen=['dimensions' => 'ga:dimension5'];
-
-    $analyticsData = Analytics::performQuery(Period::days(30), "ga:totalEvents", $dimen);
-
+    $sort=['sort' => '-ga:totalEvents'];
+    $analyticsData = Analytics::performQuery(Period::days(30), "ga:totalEvents", array_merge($dimen, $sort));
+    $arrayData['recipiesites']=array();
     foreach ($analyticsData as $data) {
-        echo 'site: '. $data[0];
-        echo '<p><p></p>';
-    }
 
+        $jsonObjectData = $jsonObject->get("$.*[?(@.recipieSiteParseModel.baseUrl == '" . $data[0] . "')]");
+        $arrayData['recipiesites'] = array_merge($arrayData['recipiesites'], $jsonObjectData);
+    }
+    file_put_contents(storage_path('app/recipies_neu.json'), json_encode($arrayData), FILE_APPEND | LOCK_EX);
 
     //echo '...world ';
 });
