@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Ingredient;
 use App\User;
-use Laravel\Lumen\Routing\Controller;
+use Faker\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
-class UserController extends Controller
+class UserController extends BaseController
 {
 
     /**
@@ -36,7 +38,7 @@ class UserController extends Controller
             return response()->json($user);
         }
         else{
-            return response()->json(['status' => 'fail']);
+            return response()->json(['status' => 'failed']);
         }
     }
 
@@ -48,7 +50,32 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $input = $request->all();
+
+        /*
+         * Ermittel avatar
+         */
+        $rvo = DB::table('ingredients')
+            ->inRandomOrder()
+            ->first();
+        $input['avatar'] =$rvo->i_name;
+        if ($rvo->i_selected > 0) {
+            $input['avatar'] = $input['avatar'].$rvo->i_selected;
+    }
+
+        $rvo->i_selected=$rvo->i_selected+1;
+        $ingrVo = new Ingredient($rvo);
+        $ingrVo->i_selected=$rvo->i_selected;
+        $ingrVo->i_id=$rvo->i_id;
+        $rvo->update();
+        /*
+         * Passwort aus 6 Buchstaben bilden
+         *
+         */
+        $faker = Factory::create();
+        $input['password'] = $faker->numberBetween(100000, 999999);
+
         $input['avatar'] = url('/').'/'.$input['avatar'];
         $request->replace($input);
 
