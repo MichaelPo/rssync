@@ -16,6 +16,7 @@ use Spatie\Analytics\AnalyticsFacade as Analytics;
 $app->group(['prefix' => 'user/'], function ($app) {
     $app->get('/','UserController@index'); //get all the routes
     $app->post('/','UserController@store'); //store single route
+    $app->post('/login','UserController@login'); //store single route
     $app->get('/{id}/', 'UserController@show'); //get single route
     $app->put('/{id}/','UserController@update'); //update single route
     $app->delete('/{id}/','UserController@destroy'); //delete single route

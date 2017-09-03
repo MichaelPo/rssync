@@ -27,17 +27,16 @@ class UserController extends BaseController
     /**
      * Get the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         //
         $user = User::where('id', $id)->get();
-        if(!empty($user['avatar'])){
+        if ($user) {
             return response()->json($user);
-        }
-        else{
+        } else {
             return response()->json(['status' => 'failed']);
         }
     }
@@ -45,42 +44,41 @@ class UserController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-
         $input = $request->all();
-
         /*
          * Ermittel avatar
          */
         $rvo = DB::table('ingredients')
             ->inRandomOrder()
             ->first();
-        $input['avatar'] =$rvo->i_name;
+        $input['avatar'] = $rvo->i_name;
         if ($rvo->i_selected > 0) {
-            $input['avatar'] = $input['avatar'].$rvo->i_selected;
-    }
-
-        $rvo->i_selected=$rvo->i_selected+1;
-        $ingrVo = new Ingredient($rvo);
-        $ingrVo->i_selected=$rvo->i_selected;
-        $ingrVo->i_id=$rvo->i_id;
-        $rvo->update();
+            $input['avatar'] = $input['avatar'] . $rvo->i_selected;
+        }
+        $rvo->i_selected = $rvo->i_selected + 1;
+        $rvoObject = json_decode(json_encode($rvo), true);
+        $ingrVo = new Ingredient($rvoObject);
+        $ingrVo->i_selected = $rvo->i_selected;
+        $ingrVo->i_id = $rvo->i_id;
+        $ingrVo->update();
         /*
          * Passwort aus 6 Buchstaben bilden
          *
          */
         $faker = Factory::create();
         $input['password'] = $faker->numberBetween(100000, 999999);
-
-        $input['avatar'] = url('/').'/'.$input['avatar'];
+ /*
+        $input['avatar'] = url('/') . '/' . $input['avatar'];
+*/
         $request->replace($input);
-
         $this->validate($request, [
-            'avatar' => 'required|url|unique:user',
+            //'avatar' => 'required|url|unique:user',
+            'avatar' => 'required|unique:user',
             'password' => 'required|min:6',
             'jsonfav' => 'required',
             'lastsync' => 'required'
@@ -98,12 +96,41 @@ class UserController extends BaseController
         return response()->json($user);
 
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        $this->validate($request, [
+            'avatar' => 'required',
+            'password' => 'required',
+        ]);
+
+        $input = $request->all();
+        /*
+         * Login über die App
+         */
+        $user = User::where('avatar', $input['avatar'])->first();
+        if (!empty($user)) {
+            if ($user['password'] == $input['password']) {
+                return response()->json($user);
+            } else {
+                return response()->json(['status' => 'failed']);
+            }
+        } else {
+            return response()->json(['status' => 'failed']);
+        }
+
+    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -136,13 +163,13 @@ class UserController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
-        if(User::destroy($id)){
+        if (User::destroy($id)) {
             return response()->json(['status' => 'success']);
         }
     }
