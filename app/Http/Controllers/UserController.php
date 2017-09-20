@@ -142,19 +142,20 @@ class UserController extends BaseController
         }
         //
         $this->validate($request, [
+          /*
             'avatar' => 'required',
             'password' => 'required',
-            'jsonfav' => 'required',
+          */
+          'jsonfav' => 'required',
             'lastsync' => 'required'
         ]);
 
-        $user = new User();
-        $user->avatar = $request->avatar;
+        //$user->avatar = $request->avatar;
         $user->email = $request->email;
-        $user->password = $request->password;
+        //$user->password = $request->password;
         $user->jsonfav = $request->jsonfav;
         $date = new \DateTime($request->lastsync);
-        $dd = $date->format('Y-m-d');
+        $dd = $date->format('Y-m-d H:i:s');
         $user->lastsync = $dd;
         $user->save();
         return response()->json(['status' => 'success', 'id' => $user->id]);
